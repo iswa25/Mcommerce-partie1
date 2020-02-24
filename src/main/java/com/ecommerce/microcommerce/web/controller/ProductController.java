@@ -2,6 +2,7 @@ package com.ecommerce.microcommerce.web.controller;
 
 import com.ecommerce.microcommerce.dao.ProductDao;
 import com.ecommerce.microcommerce.model.Product;
+import com.ecommerce.microcommerce.web.exceptions.ProduitGratuitException;
 import com.ecommerce.microcommerce.web.exceptions.ProduitIntrouvableException;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -68,7 +69,7 @@ public class ProductController {
     //ajouter un produit
     @PostMapping(value = "/Produits")
 
-    public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Product product) {
+    public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Product product) throws ProduitGratuitException {
 
         Product productAdded =  productDao.save(product);
 
@@ -80,6 +81,8 @@ public class ProductController {
                 .path("/{id}")
                 .buildAndExpand(productAdded.getId())
                 .toUri();
+
+        if (productAdded.getPrix() == 0) throw new ProduitGratuitException("Aucun produit est gratuit. Veuillez saisir un peix de vente!!");
 
         return ResponseEntity.created(location).build();
     }
