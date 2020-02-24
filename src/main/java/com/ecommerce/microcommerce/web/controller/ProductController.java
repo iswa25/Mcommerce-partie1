@@ -111,7 +111,7 @@ public class ProductController {
         HashMap<Product, Integer> map = new HashMap<Product, Integer>();
 
         for (Product p : liste) {
-            int marge = p.getPrixAchat() - p.getPrix();
+            int marge = p.getPrix() - p.getPrixAchat();
             map.put(p, marge);
 
         }
@@ -121,6 +121,15 @@ public class ProductController {
         return produits;
 
     }
+
+
+    @GetMapping(value = "/TriProduits")
+
+    public List<Product> trierProduitsParOrdreAlphabetique(){
+        return productDao.findAllByOrderByNom();
+    }
+
+
 
 
 
